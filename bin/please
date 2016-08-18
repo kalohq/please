@@ -1,0 +1,50 @@
+#! /usr/bin/env node
+'use strict';
+
+const path = require('path');
+const fs = require('fs');
+const tinyError = require('tiny-error');
+const childProcess = require('child_process');
+
+function findScriptsDir(currentPath) {
+  const scriptsPath = path.resolve(currentPath, 'scripts');
+  let scriptsStat;
+  try {
+    scriptsStat = fs.statSync(scriptsPath);
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+
+    const nextPath = path.resolve(currentPath, '..');
+    if (nextPath === currentPath) throw tinyError(
+      'We’re unable to find a scripts directory. Make sure your current ' +
+      'working directory or any of its ancestors has a subdirectory called ' +
+      '`scripts`.'
+    );
+    return findScriptsDir(nextPath);
+  }
+
+  if (scriptsStat.isDirectory()) return scriptsPath;
+  return findScriptsDir(nextPath);
+}
+
+const scriptsDir = findScriptsDir(process.cwd());
+
+if (process.argv.length < 3) {
+  process.stdout.write('\nAvailable commands:\n');
+  fs.readdirSync(scriptsDir).forEach(file => {
+    if (file === '_') return;
+    process.stdout.write(`  ${file}\n`);
+  });
+  process.stdout.write('\n');
+  process.exit(0);
+}
+
+const script = process.argv[2];
+const args = process.argv.slice(3);
+
+const processData = childProcess.spawnSync(
+  path.resolve(scriptsDir, script),
+  args,
+  { stdio: 'inherit' }
+);
+process.exit(processData.status);

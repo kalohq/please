@@ -1,0 +1,31 @@
+{
+  "name": "please",
+  "version": "0.0.0",
+  "description": "A pragmatic script runner",
+  "bin": {
+    "please": "bin/please"
+  },
+  "engines": {
+    "node": ">= 4.0.0"
+  },
+  "files": [
+    "**/*.js",
+    "!/test.js",
+    "/Readme.md",
+    "/License.md",
+    "/manpages/"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "cli",
+    "tool"
+  ],
+  "author": "Tomek Wiszniewski <t.wiszniewski@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:lystable/please"
+  },
+  "dependencies": {
+    "tiny-error": "^1.0.2"
+  }
+}
