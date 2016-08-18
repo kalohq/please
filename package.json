@@ -6,7 +6,8 @@
     "please": "bin/please"
   },
   "scripts": {
-    "test": "node-dev --respawn --no-notify --no-deps test.js"
+    "develop": "node-dev --respawn --no-notify --no-deps test/index.js",
+    "test": "eslint . && node test/index.js"
   },
   "engines": {
     "node": ">= 4.0.0"
