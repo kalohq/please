@@ -9,12 +9,13 @@ const childProcess = require('child_process');
 function findScriptsDir(currentPath) {
   const scriptsPath = path.resolve(currentPath, 'scripts');
   let scriptsStat;
+  let nextPath;
   try {
     scriptsStat = fs.statSync(scriptsPath);
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
 
-    const nextPath = path.resolve(currentPath, '..');
+    nextPath = path.resolve(currentPath, '..');
     if (nextPath === currentPath) throw tinyError(
       'We’re unable to find a scripts directory. Make sure your current ' +
       'working directory or any of its ancestors has a subdirectory called ' +
