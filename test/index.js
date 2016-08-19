@@ -3,11 +3,11 @@
 require('tap-spec-integrated');
 
 const test = require('tape-catch');
-const mock = require('mock-fs');
+const mockFs = require('mock-fs');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
-const executable = mock.file({
+const executable = mockFs.file({
   mode: parseInt('111', 8),
 });
 
@@ -31,7 +31,7 @@ test((
     'child_process': { spawnSync },
   });
 
-  mock({
+  mockFs({
     '/scripts': {
       [script]: executable,
     },
@@ -73,7 +73,7 @@ test((
     'with the same exit code as the script’s'
   );
 
-  mock.restore();
+  mockFs.restore();
   is.end();
 });
 
