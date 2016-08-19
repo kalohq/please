@@ -27,19 +27,21 @@ function findScriptsDir(currentPath) {
   return findScriptsDir(nextPath);
 }
 
-const scriptsDir = findScriptsDir(process.cwd());
+module.exports = (args, globals) => {
+  const process = globals.process;
 
-if (process.argv.length < 3) {
-  process.stdout.write('\nAvailable commands:\n');
-  fs.readdirSync(scriptsDir).forEach(file => {
-    if (file === '_') return;
-    process.stdout.write(`  ${file}\n`);
-  });
-  process.stdout.write('\n');
-  process.exit(0);
-}
+  const scriptsDir = findScriptsDir(process.cwd());
 
-module.exports = (args) => {
+  if (!args.length) {
+    process.stdout.write('\nAvailable commands:\n');
+    fs.readdirSync(scriptsDir).forEach(file => {
+      if (file === '_') return;
+      process.stdout.write(`  ${file}\n`);
+    });
+    process.stdout.write('\n');
+    process.exit(0);
+  }
+
   const script = args[0];
   const scriptArgs = args.slice(1);
 
