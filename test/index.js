@@ -206,6 +206,61 @@ test((
   is.end();
 });
 
-test.skip((
+test((
   'Prints a list of found executables when called without arguments'
-));
+), (is) => {
+  const scriptOne = 'script-one';
+  const scriptTwo = 'script-two';
+  const status = 5;
+
+  const spawnSync = sinon.stub().returns({ status });
+  const cwd = '/current-working-dir';
+  const stdout = {
+    write: sinon.spy(),
+  };
+
+  const process = newProcess({
+    cwd: () => cwd,
+    stdout,
+  });
+
+  const please = proxyquire('..', {
+    'child_process': { spawnSync },
+  });
+
+  mockFs({
+    '/scripts': {
+      [scriptTwo]: executable,
+      'directory': {},
+    },
+    [cwd]: {
+      'scripts': {
+        [scriptOne]: executable,
+        'plain-text-file': '(plain text)',
+      },
+    },
+  });
+
+  const callCount = stdout.write.callCount;
+  please([], { process });
+
+  is.equal(
+    stdout.write.callCount,
+    callCount + 1,
+    'prints to stdout'
+  );
+  is.deepEqual(
+    stdout.write.lastCall.args,
+    [
+      '\n' +
+      'Available commands:\n' +
+      `  ${scriptOne}\n` +
+      `  ${scriptTwo}\n` +
+      '\n',
+    ],
+    'prints the right stuff'
+  );
+
+  mockFs.restore();
+  is.end();
+});

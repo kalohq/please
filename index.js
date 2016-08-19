@@ -55,15 +55,24 @@ module.exports = (args, globals) => {
   );
 
   if (!args.length) {
-    process.stdout.write('\nAvailable commands:\n');
-    scriptsDirs.forEach(dir => {
-      fs.readdirSync(dir).forEach(file => {
-        if (file === '_') return;
-        process.stdout.write(`  ${file}\n`);
-      });
-    });
-    process.stdout.write('\n');
+    const allScripts = scriptsDirs.map((dir) => (
+      fs.readdirSync(dir).filter(file => (
+        fileInfo(path.join(dir, file)).executable
+      ))
+    ));
+    const allScriptsFlat = Array.prototype.concat.apply([], allScripts);
+
+    /* eslint-disable prefer-template */
+    // So how do you propose to format this, ESLint?
+    process.stdout.write(
+      '\n' +
+      'Available commands:\n' +
+      allScriptsFlat.map(script => `  ${script}\n`).join('') +
+      '\n'
+    );
+    /* eslint-enable prefer-template */
     process.exit(0);
+    return;
   }
 
   const script = args[0];
