@@ -31,7 +31,7 @@ function findScriptsDirs(directories, currentPath) {
     scriptsStat = fs.statSync(scriptsPath);
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
-
+    if (nextPath === currentPath) return directories;
     return findScriptsDirs(directories, nextPath);
   }
 
