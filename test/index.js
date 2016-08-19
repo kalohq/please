@@ -77,6 +77,33 @@ test((
   is.end();
 });
 
+test((
+  'Throws an informative error if it can’t find a scripts directory'
+), (is) => {
+  const process = newProcess();
+  const please = proxyquire('..', {});
+
+  mockFs({
+    '/someting-else': {},
+  });
+
+  try {
+    please(['my-script', 'whatever'], { process });
+  } catch (error) {
+    is.ok(
+      /can’t find a scripts directory/i.test(error.message),
+      'says what’s wrong'
+    );
+    is.ok(
+      /make sure/i.test(error.message),
+      'says what to do'
+    );
+  }
+
+  mockFs.restore();
+  is.end();
+});
+
 test.skip('Throws an informative error if it can’t find the script');
 
 test.skip('Looks for executables recursively, crawling up the directory tree');

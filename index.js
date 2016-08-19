@@ -16,9 +16,9 @@ function findScriptsDir(currentPath) {
 
     nextPath = path.resolve(currentPath, '..');
     if (nextPath === currentPath) throw tinyError(
-      'We’re unable to find a scripts directory. Make sure your current ' +
-      'working directory or any of its ancestors has a subdirectory called ' +
-      '`scripts`.'
+      'Hmmm. We’ve looked everywhere, but we can’t find a scripts directory. ' +
+      'Make sure your current working directory or any of its ancestors ' +
+      'contains a subdirectory named `scripts`.'
     );
     return findScriptsDir(nextPath);
   }
