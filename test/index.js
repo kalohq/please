@@ -7,16 +7,25 @@ const mock = require('mock-fs');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 
-test('Runs an executable from a `scripts` directory in the CWD', (is) => {
+const executable = mock.file({
+  mode: parseInt('111', 8),
+});
+
+const newProcess = (splat) => Object.assign({
+  cwd: () => '/',
+  exit: () => {},
+}, splat);
+
+test((
+  'Runs an executable from a `scripts` directory in the CWD'
+), (is) => {
   const script = 'my-script';
   const args = ['one two', 'three'];
   const status = 5;
 
   const spawnSync = sinon.stub().returns({ status });
-  const process = {
-    cwd: () => '/',
-    exit: sinon.spy(),
-  };
+  const exit = sinon.spy();
+  const process = newProcess({ exit });
 
   const please = proxyquire('..', {
     'child_process': { spawnSync },
@@ -24,42 +33,48 @@ test('Runs an executable from a `scripts` directory in the CWD', (is) => {
 
   mock({
     '/scripts': {
-      [script]: mock.file({
-        mode: parseInt('111', 8),
-      }),
+      [script]: executable,
     },
   });
 
-  const callCount = spawnSync.callCount;
+  const spawnSyncCallCount = spawnSync.callCount;
+  const exitCallCount = exit.callCount;
   please([script].concat(args), { process });
 
   is.equal(
     spawnSync.callCount,
-    callCount + 1,
+    spawnSyncCallCount + 1,
     'uses `child_process.spawnSync`'
   );
-
   is.equal(
     spawnSync.lastCall.args[0],
     `/scripts/${script}`,
     'to call the right script'
   );
-
   is.deepEqual(
     spawnSync.lastCall.args[1],
     args,
     'with the right arguments'
   );
-
   is.deepEqual(
     spawnSync.lastCall.args[2],
     { stdio: 'inherit' },
     'printing to stdout/stderr and reading from stdin'
   );
 
-  is.end();
+  is.equal(
+    exit.callCount,
+    exitCallCount + 1,
+    'exits the parent process'
+  );
+  is.deepEqual(
+    exit.lastCall.args,
+    [status],
+    'with the same exit code as the script’s'
+  );
 
   mock.restore();
+  is.end();
 });
 
 test.skip('Throws an informative error if it can’t find the script');
