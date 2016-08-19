@@ -167,6 +167,10 @@ test((
   is.end();
 });
 
-test.skip('Looks for executables recursively, crawling up the directory tree');
+test.skip((
+  'Looks for executables recursively, crawling up the directory tree'
+));
 
-test.skip('Prints a list of found executables when called without arguments');
+test.skip((
+  'Prints a list of found executables when called without arguments'
+));
