@@ -167,9 +167,44 @@ test((
   is.end();
 });
 
-test.skip((
+test((
   'Looks for executables recursively, crawling up the directory tree'
-));
+), (is) => {
+  const script = 'my-script';
+  const status = 5;
+
+  const spawnSync = sinon.stub().returns({ status });
+  const cwd = '/current-working-dir';
+  const process = newProcess({
+    cwd: () => cwd,
+  });
+
+  const please = proxyquire('..', {
+    'child_process': { spawnSync },
+  });
+
+  mockFs({
+    '/scripts': {
+      [script]: executable,
+    },
+    [cwd]: {
+      'scripts': {
+        'other-script': executable,
+      },
+    },
+  });
+
+  please([script], { process });
+
+  is.equal(
+    spawnSync.lastCall.args[0],
+    `/scripts/${script}`,
+    'calls the right script'
+  );
+
+  mockFs.restore();
+  is.end();
+});
 
 test.skip((
   'Prints a list of found executables when called without arguments'
