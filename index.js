@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const tinyError = require('tiny-error');
 const childProcess = require('child_process');
+const permissions = require('mode-to-permissions');
 
 function findScriptsDir(currentPath) {
   const scriptsPath = path.resolve(currentPath, 'scripts');
@@ -30,7 +31,8 @@ function findScriptsDir(currentPath) {
 module.exports = (args, globals) => {
   const process = globals.process;
 
-  const scriptsDir = findScriptsDir(process.cwd());
+  const cwd = process.cwd();
+  const scriptsDir = findScriptsDir(cwd);
 
   if (!args.length) {
     process.stdout.write('\nAvailable commands:\n');
@@ -45,8 +47,35 @@ module.exports = (args, globals) => {
   const script = args[0];
   const scriptArgs = args.slice(1);
 
+  const scriptPath = path.resolve(scriptsDir, script);
+  const relativeScriptPath = path.join(
+    path.relative(cwd, scriptsDir),
+    script
+  );
+  let exists = true;
+  let scriptStats;
+  try {
+    scriptStats = fs.statSync(scriptPath);
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    exists = false;
+  }
+  if (!exists) throw tinyError(
+    'Aw shucks! We’ve searched the whole place, but we can’t find ' +
+    `the script \`${script}\`. Make sure there’s an executable file ` +
+    `at \`${relativeScriptPath}\`.`
+  );
+  if (
+    !scriptStats.isFile() ||
+    !permissions(scriptStats).execute.owner
+  ) throw tinyError(
+    `Pssst. We can’t run the file \`${relativeScriptPath}\`, because ` +
+    'it’s not an executable. You can grant it execute permissions by running ' +
+    `\`chmod +x ${relativeScriptPath}\`.`
+  );
+
   const processData = childProcess.spawnSync(
-    path.resolve(scriptsDir, script),
+    scriptPath,
     scriptArgs,
     { stdio: 'inherit' }
   );

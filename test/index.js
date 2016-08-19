@@ -80,6 +80,8 @@ test((
 test((
   'Throws an informative error if it can’t find a scripts directory'
 ), (is) => {
+  is.plan(2);
+
   const process = newProcess();
   const please = proxyquire('..', {});
 
@@ -92,11 +94,11 @@ test((
   } catch (error) {
     is.ok(
       /can’t find a scripts directory/i.test(error.message),
-      'says what’s wrong'
+      'tells me what’s wrong'
     );
     is.ok(
       /make sure/i.test(error.message),
-      'says what to do'
+      'tells me what to do'
     );
   }
 
@@ -104,7 +106,66 @@ test((
   is.end();
 });
 
-test.skip('Throws an informative error if it can’t find the script');
+test((
+  'Throws an informative error if it can’t find the script'
+), (is) => {
+  is.plan(2);
+
+  const process = newProcess();
+  const please = proxyquire('..', {});
+
+  mockFs({
+    '/scripts': {},
+  });
+
+  try {
+    please(['my-script', 'whatever'], { process });
+  } catch (error) {
+    is.ok(
+      /can’t find the script `my-script`/i.test(error.message),
+      'tells me what’s wrong'
+    );
+    is.ok(
+      /make sure/i.test(error.message),
+      'tells me what to do'
+    );
+  }
+
+  mockFs.restore();
+  is.end();
+});
+
+test((
+  'Throws an informative error if the script is not an executable file ' +
+  'or symlink'
+), (is) => {
+  is.plan(2);
+
+  const process = newProcess();
+  const please = proxyquire('..', {});
+
+  mockFs({
+    '/scripts': {
+      'my-script': '(plain text)',
+    },
+  });
+
+  try {
+    please(['my-script', 'whatever'], { process });
+  } catch (error) {
+    is.ok(
+      /can’t run the file `scripts\/my-script`/i.test(error.message),
+      'tells me what’s wrong'
+    );
+    is.ok(
+      /you can/i.test(error.message),
+      'tells me what to do'
+    );
+  }
+
+  mockFs.restore();
+  is.end();
+});
 
 test.skip('Looks for executables recursively, crawling up the directory tree');
 
