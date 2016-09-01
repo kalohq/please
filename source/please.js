@@ -5,6 +5,7 @@ const fs = require('fs');
 const tinyError = require('tiny-error');
 const childProcess = require('child_process');
 const permissions = require('mode-to-permissions');
+const hasbin = require('hasbin');
 
 const fileInfo = (filePath) => {
   let stats;
@@ -48,6 +49,23 @@ function findScriptsDirs(directories, currentPath) {
  */
 module.exports = (args, globals) => {
   const process = globals.process;
+
+  if (args[0] === '--help') {
+    if (hasbin.sync('man')) {
+      childProcess.spawnSync(
+        'man',
+        [path.resolve(__dirname, '../manpages/please.1')],
+        { stdio: [process.stdout, process.stdin] }
+      );
+    } else {
+      const fallbackPath =
+        path.resolve(__dirname, '../manpages/please.1.txt');
+      const plainTextHelp =
+        fs.readFileSync(fallbackPath, 'utf8');
+      process.stdout.write(plainTextHelp);
+    }
+    return 0;
+  }
 
   const cwd = process.cwd();
   const scriptsDirs = findScriptsDirs([], cwd);

@@ -6,6 +6,7 @@ const test = require('tape-catch');
 const mockFs = require('mock-fs');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
+const path = require('path');
 
 const executable = mockFs.file({
   mode: parseInt('111', 8),
@@ -13,8 +14,102 @@ const executable = mockFs.file({
 
 const newProcess = (splat) => Object.assign({
   cwd: () => '/',
-  exit: () => {},
+  stdout: {},
+  stdin: {},
 }, splat);
+
+test((
+  'Displays nice `--help`'
+), (is) => {
+  const status = 5;
+  const spawnSync = sinon.stub().returns({ status });
+  const process = newProcess();
+
+  const please = proxyquire('../source/please', {
+    'child_process': { spawnSync },
+  });
+
+  const exitCode = please(['--help'], { process });
+
+  is.equal(
+    spawnSync.callCount,
+    1,
+    'spawns…'
+  );
+
+  const command = spawnSync.lastCall.args[0];
+  const args = spawnSync.lastCall.args[1];
+  const config = spawnSync.lastCall.args[2];
+  is.equal(command, 'man',
+    '…`man`'
+  );
+
+  is.equal(
+    args[0],
+    path.resolve(__dirname, '../manpages/please.1'),
+    'with the right manpage'
+  );
+
+  is.equal(
+    config.stdio[0],
+    process.stdout,
+    'writes to `stdout`'
+  );
+
+  is.equal(
+    config.stdio[1],
+    process.stdin,
+    'reads from `stdin`'
+  );
+
+  is.equal(exitCode, 0,
+    'succeeds'
+  );
+  is.end();
+});
+
+test((
+  'Falls back to plain text `--help` over stdout'
+), (is) => {
+  const expectedHelpContent = 'I’m dreaming of a white Christmas';
+  const hasbin = { sync: sinon.stub().returns(false) };
+  const fs = { readFileSync: sinon.stub().returns(expectedHelpContent) };
+  const stdout = { write: sinon.spy() };
+
+  const please = proxyquire('../source/please', {
+    hasbin,
+    fs,
+  });
+
+  const exitCode = please(['--help'], { process: newProcess({ stdout }) });
+
+  is.equal(
+    hasbin.sync.calledOnce &&
+    hasbin.sync.lastCall.args[0],
+    'man',
+    'checks if `man` is in the PATH'
+  );
+
+  const expectedLocation = '../manpages/please.1.txt';
+  is.deepEqual(
+    fs.readFileSync.calledOnce &&
+    fs.readFileSync.lastCall.args,
+    [path.resolve(__dirname, expectedLocation), 'utf8'],
+    `reads the file at \`${expectedLocation}\``
+  );
+
+  is.equal(
+    stdout.write.calledOnce &&
+    stdout.write.lastCall.args[0],
+    expectedHelpContent,
+    'prints the help text'
+  );
+
+  is.equal(exitCode, 0,
+    'succeeds'
+  );
+  is.end();
+});
 
 test((
   'Runs an executable from a `scripts` directory in the CWD'
