@@ -24,8 +24,6 @@ test((
   const status = 5;
 
   const spawnSync = sinon.stub().returns({ status });
-  const exit = sinon.spy();
-  const process = newProcess({ exit });
 
   const please = proxyquire('..', {
     'child_process': { spawnSync },
@@ -38,8 +36,7 @@ test((
   });
 
   const spawnSyncCallCount = spawnSync.callCount;
-  const exitCallCount = exit.callCount;
-  please([script].concat(args), { process });
+  const exitCode = please([script].concat(args), { process: newProcess() });
 
   is.equal(
     spawnSync.callCount,
@@ -63,14 +60,9 @@ test((
   );
 
   is.equal(
-    exit.callCount,
-    exitCallCount + 1,
-    'exits the parent process'
-  );
-  is.deepEqual(
-    exit.lastCall.args,
-    [status],
-    'with the same exit code as the script’s'
+    exitCode,
+    status,
+    'exits with the same status as the script'
   );
 
   mockFs.restore();

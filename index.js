@@ -43,6 +43,9 @@ function findScriptsDirs(directories, currentPath) {
   return findScriptsDirs(nextDirectories, nextPath);
 }
 
+/**
+ * Takes raw CLI `args` and a global `process`. Returns the exit code.
+ */
 module.exports = (args, globals) => {
   const process = globals.process;
 
@@ -71,8 +74,7 @@ module.exports = (args, globals) => {
       '\n'
     );
     /* eslint-enable prefer-template */
-    process.exit(0);
-    return;
+    return 0;
   }
 
   const script = args[0];
@@ -83,28 +85,32 @@ module.exports = (args, globals) => {
     script
   );
 
-  const scriptFound = scriptsDirs.some((dir) => {
-    const scriptPath = path.resolve(dir, script);
-    const file = fileInfo(scriptPath);
+  const scriptsPathData = scriptsDirs.map((dir) => ({
+    dir,
+    file: path.resolve(dir, script),
+  }));
+  const scriptPathData = scriptsPathData.find((data) => {
+    const file = fileInfo(data.file);
     if (!file.exists) return false;
     if (!file.executable) throw tinyError(
-      `Pssst. We can’t run the file \`${relativeScriptPath(dir)}\`, because ` +
+      `Pssst. We can’t run the file \`${relativeScriptPath(data.dir)}\`, because ` +
       'it’s not an executable. You can grant it execute permissions ' +
-      `by running \`chmod +x ${relativeScriptPath(dir)}\`.`
+      `by running \`chmod +x ${relativeScriptPath(data.dir)}\`.`
     );
-
-    const processData = childProcess.spawnSync(
-      scriptPath,
-      scriptArgs,
-      { stdio: 'inherit' }
-    );
-    process.exit(processData.status);
     return true;
   });
 
-  if (!scriptFound) throw tinyError(
+  if (scriptPathData === undefined) throw tinyError(
     'Aw shucks! We’ve searched the whole place, but we can’t find ' +
     `the script \`${script}\`. Make sure there’s an executable file ` +
     `at \`${relativeScriptPath(scriptsDirs[0])}\`.`
   );
+
+
+  const processData = childProcess.spawnSync(
+    scriptPathData.file,
+    scriptArgs,
+    { stdio: 'inherit' }
+  );
+  return processData.status;
 };
