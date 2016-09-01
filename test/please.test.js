@@ -25,7 +25,7 @@ test((
 
   const spawnSync = sinon.stub().returns({ status });
 
-  const please = proxyquire('..', {
+  const please = proxyquire('../source/please', {
     'child_process': { spawnSync },
   });
 
@@ -75,7 +75,7 @@ test((
   is.plan(2);
 
   const process = newProcess();
-  const please = proxyquire('..', {});
+  const please = proxyquire('../source/please', {});
 
   mockFs({
     '/someting-else': {},
@@ -104,7 +104,7 @@ test((
   is.plan(2);
 
   const process = newProcess();
-  const please = proxyquire('..', {});
+  const please = proxyquire('../source/please', {});
 
   mockFs({
     '/scripts': {},
@@ -134,7 +134,7 @@ test((
   is.plan(2);
 
   const process = newProcess();
-  const please = proxyquire('..', {});
+  const please = proxyquire('../source/please', {});
 
   mockFs({
     '/scripts': {
@@ -171,7 +171,7 @@ test((
     cwd: () => cwd,
   });
 
-  const please = proxyquire('..', {
+  const please = proxyquire('../source/please', {
     'child_process': { spawnSync },
   });
 
@@ -216,7 +216,7 @@ test((
     stdout,
   });
 
-  const please = proxyquire('..', {
+  const please = proxyquire('../source/please', {
     'child_process': { spawnSync },
   });
 
