@@ -189,7 +189,7 @@ test((
   please([script], { process });
 
   is.equal(
-    spawnSync.lastCall.args[0],
+    !!spawnSync.calledOnce && spawnSync.lastCall.args[0],
     `/scripts/${script}`,
     'calls the right script'
   );
