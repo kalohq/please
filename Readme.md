@@ -34,7 +34,7 @@
 ## INSTALLATION
 
 ```sh
-npm install --global please
+npm install --global please-runner
 ```
 
 

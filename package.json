@@ -1,7 +1,7 @@
 {
-  "name": "please",
+  "name": "please-runner",
   "version": "0.0.0",
-  "description": "A pragmatic script runner",
+  "description": "The polite script runner",
   "bin": {
     "please": "bin/please"
   },
