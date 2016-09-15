@@ -136,7 +136,7 @@ Windows support isn’t there just yet. It’s perfectly possible though. So if 
 
 ## CREDITS
 
-Many thanks to Lisa Krymova for the elegant bowtie icon in our logo. 
+Many thanks to Lisa Krymova for the elegant bowtie icon in our logo.
 
 Many thanks to Catharsis Fonts for the amazing [open-source font](https://www.behance.net/gallery/28579883/Cormorant-an-open-source-display-font-family) we’ve used in the wordmark.
 
