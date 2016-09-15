@@ -16,6 +16,7 @@
   "files": [
     "**/*.js",
     "!/test.js",
+    "/bin/",
     "/Readme.md",
     "/License.md",
     "/manpages/"
