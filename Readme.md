@@ -125,6 +125,8 @@ At the moment, it’s most convenient if you save scripts without without a file
 
 For future compatibility, make sure your script names don’t begin with a dash (`-`). Unsurprisingly, `please --help` will **not** run `scripts/--help`.
 
+Windows support isn’t there just yet. It’s perfectly possible though. So if you need it, don’t hesitate to [give us a shout](https://git.io/please.issues).
+
 
 
 
