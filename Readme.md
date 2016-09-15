@@ -70,7 +70,7 @@ Now, whenever you run `please <script name>`, we’ll politely run `scripts/<scr
 
 #### script arguments
 
-As opposed to many other script runners, please makes it super easy to pass arguments to scripts. We’ll just pass them over to the script just as you’d expect.
+As opposed to many other script runners, please makes it super easy to pass arguments to scripts. We’ll pass them over to the executable just as you’d expect.
 
 So, when you run `please build --mode=dev --target='release v3.0.0'`, we’ll spawn `scripts/build --mode=dev --target='release v3.0.0'`.
 
