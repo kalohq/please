@@ -66,6 +66,22 @@ Now, whenever you run `please <script name>`, we’ll politely run `scripts/<scr
 
 
 
+<a id="/options"></a>&nbsp;
+
+## OPTIONS
+
+#### `<script name>`
+We’ll execute `scripts/<script name>` for you.
+
+#### `[...args]`
+We’ll pass any args over to your script.
+
+#### `--help`
+You’re looking at it.
+
+
+
+
 <a id="/goodies"></a>&nbsp;
 
 ## GOODIES
@@ -80,7 +96,7 @@ So, when you run `please build --mode=dev --target='release v3.0.0'`, we’ll s
 
 please looks for any script recursively. When you call `please help`, we’ll try running `./scripts/help`. If there’s no executable file there, we’ll have a go at `../scripts/help`. We keep going upwards until we find it for you.
 
-This makes it really easy for you to organize scripts in a natural way. For instance, as well as project-specific scripts, you can have a personal collection of command-line tricks at `/home/<you>/scripts/`.
+This makes it really easy for you to organize scripts in a natural way. Especially handy in a monorepo, where you often need project-wide scripts in the root directory and package-wide scripts in subdirectories.
 
 #### overview
 
@@ -99,22 +115,6 @@ please scripts are just executable files. You might have noticed this already, b
 As well as that, because each of your scripts defines its interpreter explicitly through the [shebang](https://en.wikipedia.org/wiki/Shebang_%28Unix%29), you can use them in any shell.
 
 One more note. please is so simple, that it doesn’t need any configuration. No more “weird, it works on my laptop” problems.
-
-
-
-
-<a id="/options"></a>&nbsp;
-
-## OPTIONS
-
-#### `<script name>`
-If you pass a script name, we’ll execute `scripts/<script name>` for you.
-
-#### `[...args]`
-If you pass any args, we’ll pass them over to your script.
-
-#### `--help`
-You’re looking at it.
 
 
 
