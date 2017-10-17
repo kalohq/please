@@ -34,9 +34,9 @@
 ## INSTALLATION
 
 ```sh
-yarn global add please-runner
-# or
 npm install --global please-runner
+# or
+yarn global add please-runner
 ```
 
 
