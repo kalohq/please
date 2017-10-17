@@ -1,2 +1,3 @@
 node_modules/
 /manpages/
+.DS_Store
