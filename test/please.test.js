@@ -1,5 +1,3 @@
-/* eslint-disable quote-props */
-// mock-fs file trees and proxyquire overrides look better when quoted
 require('tap-spec-integrated');
 
 const test = require('tape-catch');
@@ -7,6 +5,7 @@ const mockFs = require('mock-fs');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const path = require('path');
+const packageInfo = require('../package.json');
 
 const executable = mockFs.file({
   mode: 0o111,
@@ -84,6 +83,21 @@ test('Falls back to plain text `--help` over stdout', is => {
     stdout.write.calledOnce && stdout.write.lastCall.args[0],
     expectedHelpContent,
     'prints the help text'
+  );
+
+  is.equal(exitCode, 0, 'succeeds');
+  is.end();
+});
+
+test('Prints the `--version` and exits', is => {
+  const stdout = {write: sinon.spy()};
+  const please = require('../source/please'); // eslint-disable-line global-require
+  const exitCode = please(['--version'], {process: newProcess({stdout})});
+
+  is.equal(
+    stdout.write.calledOnce && stdout.write.lastCall.args[0],
+    `please v${packageInfo.version}\n`,
+    'prints the version'
   );
 
   is.equal(exitCode, 0, 'succeeds');

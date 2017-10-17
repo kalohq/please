@@ -81,6 +81,9 @@ We’ll pass any args over to your script.
 #### `--help`
 You’re looking at it.
 
+#### `--version`
+Prints the version number and exits.
+
 
 
 

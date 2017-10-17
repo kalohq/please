@@ -60,6 +60,14 @@ module.exports = (args, globals) => {
     return 0;
   }
 
+  if (args[0] === '--version') {
+    process.stdout.write(
+      `please v${require('../package.json').version // eslint-disable-line global-require
+      }\n`
+    );
+    return 0;
+  }
+
   const cwd = process.cwd();
   const scriptsDirs = findScriptsDirs([], cwd);
   if (!scriptsDirs.length)
