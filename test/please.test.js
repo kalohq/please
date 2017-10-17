@@ -7,9 +7,8 @@ const sinon = require('sinon');
 const path = require('path');
 const packageInfo = require('../package.json');
 
-const executable = mockFs.file({
-  mode: 0o111,
-});
+const executableConfig = {mode: 0o111};
+const executable = mockFs.file(executableConfig);
 
 const newProcess = spread =>
   Object.assign(
@@ -310,6 +309,62 @@ test('Prints a list of found executables when called without arguments', is => {
     ],
     'prints the right stuff'
   );
+
+  mockFs.restore();
+  is.end();
+});
+
+const executableWithDocs = ({shebang, docs}) =>
+  mockFs.file({
+    ...executableConfig,
+    content: `${shebang}\n${docs}\n`,
+  });
+
+test('Prints one-liner summaries using the first comment under the shebang', is => {
+  const jsScript = 'script-one';
+  const jsScriptDocs = 'run a JS script';
+  const bashScript = 'script-two';
+  const bashScriptDocs = 'quick & handy `rm -rf /` shortcut';
+  const bashScriptWithoutDocs = 'script-three';
+  const status = 5;
+  const spawnSync = sinon.stub().returns({status});
+  const cwd = '/current-working-dir';
+  const stdout = {write: sinon.spy()};
+  const process = newProcess({cwd: () => cwd, stdout});
+  const please = proxyquire('../source/please', {child_process: {spawnSync}});
+
+  mockFs({
+    '/scripts': {
+      [jsScript]: executableWithDocs({
+        shebang: '#! /usr/bin/env node',
+        docs: `// ${jsScriptDocs}`,
+      }),
+      [bashScript]: executableWithDocs({
+        shebang: '#!/bin/bash -ex',
+        docs: `#   ${bashScriptDocs}  `,
+      }),
+      [bashScriptWithoutDocs]: executableWithDocs({
+        shebang: '#!/bin/bash -ex',
+        docs: '',
+      }),
+    },
+  });
+
+  const exitCode = please([], {process});
+  is.true(stdout.write.calledOnce, 'prints to stdout');
+  is.deepEqual(
+    stdout.write.lastCall.args,
+    [
+      '\n' +
+        'Available commands:\n' +
+        `  ${jsScript} (${jsScriptDocs})\n` +
+        `  ${bashScriptWithoutDocs}\n` +
+        `  ${bashScript} (${bashScriptDocs})\n` +
+        '\n',
+    ],
+    'prints the right stuff'
+  );
+  is.equal(exitCode, 0, 'succeeds');
 
   mockFs.restore();
   is.end();
