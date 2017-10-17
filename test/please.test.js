@@ -11,14 +11,14 @@ const executable = mockFs.file({
   mode: 0o111,
 });
 
-const newProcess = splat =>
+const newProcess = spread =>
   Object.assign(
     {
       cwd: () => '/',
       stdout: {},
       stdin: {},
     },
-    splat
+    spread
   );
 
 test('Displays nice `--help`', is => {
