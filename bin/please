@@ -1,6 +1,4 @@
 #! /usr/bin/env node
 const please = require('../source/please.js');
 
-process.exit(
-  please(process.argv.slice(2), { process })
-);
+process.exit(please(process.argv.slice(2), {process}));
