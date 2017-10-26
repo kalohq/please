@@ -4,6 +4,7 @@ const tinyError = require('tiny-error');
 const childProcess = require('child_process');
 const permissions = require('mode-to-permissions');
 const hasbin = require('hasbin');
+const {bold} = require('chalk');
 
 const fileInfo = filePath => {
   let stats;
@@ -89,8 +90,8 @@ module.exports = (args, globals) => {
     // So how do you propose to format this, ESLint?
     process.stdout.write(
       '\n' +
-        'Available commands:\n' +
-        allScriptsFlat.map(script => `  ${script}\n`).join('') +
+        `${bold('available commands')}\n\n` +
+        allScriptsFlat.map(script => `${script}\n`).join('') +
         '\n'
     );
     /* eslint-enable prefer-template */

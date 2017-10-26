@@ -35,6 +35,7 @@
     "url": "git@github.com:lystable/please"
   },
   "dependencies": {
+    "chalk": "^2.3.0",
     "hasbin": "^1.2.3",
     "mode-to-permissions": "0.0.2",
     "tiny-error": "^1.0.2"
@@ -51,6 +52,7 @@
     "prettier": "^1.7.4",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.5",
+    "strip-ansi": "^4.0.0",
     "tap-spec-integrated": "^1.0.1",
     "tape": "^4.6.0",
     "tape-catch": "^1.0.6"

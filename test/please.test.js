@@ -6,6 +6,7 @@ const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const path = require('path');
 const packageInfo = require('../package.json');
+const naked = require('strip-ansi');
 
 const executableConfig = {mode: 0o111};
 const executable = mockFs.file(executableConfig);
@@ -298,15 +299,14 @@ test('Prints a list of found executables when called without arguments', is => {
   please([], {process});
 
   is.equal(stdout.write.callCount, callCount + 1, 'prints to stdout');
-  is.deepEqual(
-    stdout.write.lastCall.args,
-    [
+  is.equal(
+    naked(stdout.write.lastCall.args[0]),
+    '\n' +
+      'available commands\n' +
       '\n' +
-        'Available commands:\n' +
-        `  ${scriptOne}\n` +
-        `  ${scriptTwo}\n` +
-        '\n',
-    ],
+      `${scriptOne}\n` +
+      `${scriptTwo}\n` +
+      '\n',
     'prints the right stuff'
   );
 
@@ -321,10 +321,8 @@ const executableWithDocs = ({shebang, docs}) =>
   });
 
 test('Prints one-liner summaries using the first comment under the shebang', is => {
-  const jsScript = 'script-one';
-  const jsScriptDocs = 'run a JS script';
-  const bashScript = 'script-two';
-  const bashScriptDocs = 'quick & handy `rm -rf /` shortcut';
+  const scriptOneDocs = 'run a JS script';
+  const scriptTwoDocs = 'quick & handy `rm -rf /` shortcut';
   const bashScriptWithoutDocs = 'script-three';
   const status = 5;
   const spawnSync = sinon.stub().returns({status});
@@ -335,13 +333,13 @@ test('Prints one-liner summaries using the first comment under the shebang', is 
 
   mockFs({
     '/scripts': {
-      [jsScript]: executableWithDocs({
+      'script-one': executableWithDocs({
         shebang: '#! /usr/bin/env node',
-        docs: `// ${jsScriptDocs}`,
+        docs: `// ${scriptOneDocs}`,
       }),
-      [bashScript]: executableWithDocs({
+      'script-two-longer-name': executableWithDocs({
         shebang: '#!/bin/bash -ex',
-        docs: `#   ${bashScriptDocs}  `,
+        docs: `#   ${scriptTwoDocs}  `,
       }),
       [bashScriptWithoutDocs]: executableWithDocs({
         shebang: '#!/bin/bash -ex',
@@ -352,16 +350,14 @@ test('Prints one-liner summaries using the first comment under the shebang', is 
 
   const exitCode = please([], {process});
   is.true(stdout.write.calledOnce, 'prints to stdout');
-  is.deepEqual(
-    stdout.write.lastCall.args,
-    [
+  is.equal(
+    naked(stdout.write.lastCall.args[0]),
+    '\n' +
+      'available commands\n' +
       '\n' +
-        'Available commands:\n' +
-        `  ${jsScript} (${jsScriptDocs})\n` +
-        `  ${bashScriptWithoutDocs}\n` +
-        `  ${bashScript} (${bashScriptDocs})\n` +
-        '\n',
-    ],
+      `script-one              ${scriptOneDocs}\n` +
+      `script-two-longer-name  ${scriptTwoDocs}\n` +
+      '\n',
     'prints the right stuff'
   );
   is.equal(exitCode, 0, 'succeeds');
