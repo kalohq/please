@@ -301,12 +301,7 @@ test('Prints a list of found executables when called without arguments', is => {
   is.equal(stdout.write.callCount, callCount + 1, 'prints to stdout');
   is.equal(
     naked(stdout.write.lastCall.args[0]),
-    '\n' +
-      'available commands\n' +
-      '\n' +
-      `${scriptOne}\n` +
-      `${scriptTwo}\n` +
-      '\n',
+    `\navailable commands\n\n${scriptOne}\n${scriptTwo}\n`,
     'prints the right stuff'
   );
 
@@ -356,8 +351,7 @@ test('Prints one-liner summaries using the first comment under the shebang', is 
       'available commands\n' +
       '\n' +
       `script-one              ${scriptOneDocs}\n` +
-      `script-two-longer-name  ${scriptTwoDocs}\n` +
-      '\n',
+      `script-two-longer-name  ${scriptTwoDocs}\n`,
     'prints the right stuff'
   );
   is.equal(exitCode, 0, 'succeeds');

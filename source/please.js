@@ -91,8 +91,7 @@ module.exports = (args, globals) => {
     process.stdout.write(
       '\n' +
         `${bold('available commands')}\n\n` +
-        allScriptsFlat.map(script => `${script}\n`).join('') +
-        '\n'
+        allScriptsFlat.map(script => `${script}\n`).join('')
     );
     /* eslint-enable prefer-template */
     return 0;
