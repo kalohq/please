@@ -1,3 +1,4 @@
 master:
   new features:
     - `please --version` for when you need to know the version.
+    - `please` now prints one-liner script summaries

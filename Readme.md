@@ -99,7 +99,7 @@ So, when you run `please build --mode=dev --target='release v3.0.0'`, we’ll s
 
 #### composable script base
 
-please looks for any script recursively. When you call `please help`, we’ll try running `./scripts/help`. If there’s no executable file there, we’ll have a go at `../scripts/help`. We keep going upwards until we find it for you.
+please looks for any script recursively. When you call `please help-me`, we’ll try running `./scripts/help-me`. If there’s no executable file there, we’ll have a go at `../scripts/help-me`. We keep going upwards until we find it for you.
 
 This makes it really easy for you to organize scripts in a natural way. Especially handy in a monorepo, where you often need project-wide scripts in the root directory and package-wide scripts in subdirectories.
 
@@ -107,9 +107,15 @@ This makes it really easy for you to organize scripts in a natural way. Especial
 
 When you run `please` without any arguments, we’ll print a list of all available scripts. Just for your convenience.
 
+#### script summaries
+
+Ever felt lost in a project, not knowing if there’s a script for what you want to do? With please, no-one will ever feel lost again! Just add a one-liner summary to your script, right below the shebang. please will politely show that summary whenever it lists available scripts.
+
+Gone are the days of undocumented builds!
+
 #### script docs
 
-Gone are the days of undocumented builds. The effortless handling of arguments makes it really easy for you to add a `--help` option to any please script. Feel free to make it print a one-liner description – or a full-blown, manpage-like overview of workflows and options.
+One-liner summary doesn’t cut it? Worry not! The effortless handling of arguments makes it really easy for you to add a `--help` option to any please script. Feel free to make it print a one-liner description – or a full-blown, manpage-like overview of workflows and options.
 
 Believe it or not – once we’ve started documenting our own scripts with `--help`, we never want to look back.
 
