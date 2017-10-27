@@ -1,5 +1,3 @@
-require('tap-spec-integrated');
-
 const test = require('tape-catch');
 const mockFs = require('mock-fs');
 const proxyquire = require('proxyquire');

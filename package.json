@@ -7,8 +7,8 @@
   },
   "scripts": {
     "prepublish": "bin/please manpages",
-    "develop": "node-dev --respawn --no-notify --no-deps test/please.test.js",
-    "test": "eslint . && node test/please.test.js"
+    "develop": "node-dev --respawn --no-notify --no-deps test/",
+    "test": "eslint . && node test/"
   },
   "engines": {
     "node": ">= 4.0.0"
