@@ -227,7 +227,7 @@ test(
   }
 );
 
-test('Looks for executables recursively, crawling up the directory tree', is => {
+test('Looks for executables recursively if directory is marked as a subproject', is => {
   const script = 'my-script';
   const status = 5;
 
@@ -246,6 +246,7 @@ test('Looks for executables recursively, crawling up the directory tree', is => 
       [script]: executable,
     },
     [cwd]: {
+      '.pleaserc': 'subproject: true\n',
       scripts: {
         'other-script': executable,
       },
@@ -263,7 +264,7 @@ test('Looks for executables recursively, crawling up the directory tree', is => 
   is.end();
 });
 
-test('Stops looking for executables recursively once it has found a .pleaserc file', is => {
+test('Doesn’t traverse scripts if it hasn’t found a .pleaserc file', is => {
   const script = 'my-script';
   const status = 5;
 
@@ -282,7 +283,6 @@ test('Stops looking for executables recursively once it has found a .pleaserc fi
       [script]: executable,
     },
     [cwd]: {
-      '.pleaserc': '',
       scripts: {
         'other-script': executable,
       },
@@ -329,6 +329,7 @@ test('Prints a list of found executables when called without arguments', is => {
       directory: {},
     },
     [cwd]: {
+      '.pleaserc': 'subproject: true\n',
       scripts: {
         [scriptOne]: executable,
         'plain-text-file': '(plain text)',

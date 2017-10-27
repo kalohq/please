@@ -6,6 +6,7 @@ const permissions = require('mode-to-permissions');
 const hasbin = require('hasbin');
 const {bold, dim} = require('chalk');
 const getSummary = require('./getSummary');
+const yaml = require('js-yaml');
 
 const padEnd = (string, length) => {
   let result = string;
@@ -46,13 +47,16 @@ function findScriptsDirs(directories, currentPath) {
     ? directories.concat([scriptsPath])
     : directories;
 
-  let pleasercStat;
+  let pleaserc;
   try {
-    pleasercStat = fs.statSync(path.resolve(currentPath, '.pleaserc'));
+    const contents = fs.readFileSync(path.resolve(currentPath, '.pleaserc'), {
+      encoding: 'utf8',
+    });
+    pleaserc = yaml.safeLoad(contents);
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
   }
-  if (!!pleasercStat && pleasercStat.isFile()) {
+  if (!pleaserc || pleaserc.subproject !== true) {
     return nextDirectories;
   }
 

@@ -97,12 +97,6 @@ As opposed to many other script runners, please makes it super easy to pass argu
 
 So, when you run `please build --mode=dev --target='release v3.0.0'`, we’ll spawn `scripts/build --mode=dev --target='release v3.0.0'`.
 
-#### composable script base
-
-please looks for any script recursively. When you call `please help-me`, we’ll try running `./scripts/help-me`. If there’s no executable file there, we’ll have a go at `../scripts/help-me`. We keep going upwards until we find it for you.
-
-This makes it really easy for you to organize scripts in a natural way. Especially handy in a monorepo, where you often need project-wide scripts in the root directory and package-wide scripts in subdirectories.
-
 #### overview
 
 When you run `please` without any arguments, we’ll print a list of all available scripts. Just for your convenience.
@@ -118,6 +112,23 @@ Gone are the days of undocumented builds!
 One-liner summary doesn’t cut it? Worry not! The effortless handling of arguments makes it really easy for you to add a `--help` option to any please script. Feel free to make it print a one-liner description – or a full-blown, manpage-like overview of workflows and options.
 
 Believe it or not – once we’ve started documenting our own scripts with `--help`, we never want to look back.
+
+#### recursive discovery
+
+You don’t need to be in the root directory of your project to access a please script. If please doesn’t find a `scripts/` subdirectory in your current working directory, it will go up your directory tree, looking for your scripts.
+
+So instead of getting out of your way to type `cd ../../..; please make things happen` or `../../../scripts/make things happen`, you can just call `please make things happen`. please will take care of finding that script for you so you can stay focused on what you’re doing.
+
+#### monorepo-friendly
+
+If you’re looking after a monorepo, apart from project-wide scripts in the root directory you might need package-wide scripts in subdirectories. Normally, please stops looking for scripts as soon as it finds a `scripts/` directory. You can change that though if you want please to access both package-wide scripts and project-wide scripts from the package directory. Just add a `.pleaserc` file to your package directory and set the `subproject` property to `true` with JSON or YAML:
+
+```yaml
+subproject:
+  true
+```
+
+Boom! We have you covered.
 
 #### portability
 
