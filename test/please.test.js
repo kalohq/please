@@ -1,10 +1,18 @@
-const test = require('tape-catch');
+const tape = require('tape-catch');
 const mockFs = require('mock-fs');
 const proxyquire = require('proxyquire');
 const sinon = require('sinon');
 const path = require('path');
 const packageInfo = require('../package.json');
 const naked = require('strip-ansi');
+
+const test = (description, callback) => {
+  tape(description, is => {
+    mockFs.restore();
+    callback(is);
+  });
+};
+Object.assign(test, tape);
 
 const executableConfig = {mode: 0o555};
 const executable = mockFs.file(executableConfig);
@@ -141,7 +149,6 @@ test('Runs an executable from a `scripts` directory in the CWD', is => {
 
   is.equal(exitCode, status, 'exits with the same status as the script');
 
-  mockFs.restore();
   is.end();
 });
 
@@ -165,7 +172,6 @@ test('Throws an informative error if it can’t find a scripts directory', is =>
     is.ok(/make sure/i.test(error.message), 'tells me what to do');
   }
 
-  mockFs.restore();
   is.end();
 });
 
@@ -189,7 +195,6 @@ test('Throws an informative error if it can’t find the script', is => {
     is.ok(/make sure/i.test(error.message), 'tells me what to do');
   }
 
-  mockFs.restore();
   is.end();
 });
 
@@ -218,7 +223,6 @@ test(
       is.ok(/you can/i.test(error.message), 'tells me what to do');
     }
 
-    mockFs.restore();
     is.end();
   }
 );
@@ -256,7 +260,6 @@ test('Looks for executables recursively, crawling up the directory tree', is => 
     'calls the right script'
   );
 
-  mockFs.restore();
   is.end();
 });
 
@@ -309,7 +312,6 @@ test('Prints a list of found executables when called without arguments', is => {
     'prints the right stuff'
   );
 
-  mockFs.restore();
   is.end();
 });
 
@@ -363,6 +365,5 @@ test('Prints one-liner summaries using the first comment under the shebang', is 
   );
   is.equal(exitCode, 0, 'succeeds');
 
-  mockFs.restore();
   is.end();
 });
