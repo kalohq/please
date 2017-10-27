@@ -4,7 +4,7 @@ const tinyError = require('tiny-error');
 const childProcess = require('child_process');
 const permissions = require('mode-to-permissions');
 const hasbin = require('hasbin');
-const {bold} = require('chalk');
+const {bold, dim} = require('chalk');
 const getSummary = require('./getSummary');
 
 const padEnd = (string, length) => {
@@ -110,7 +110,12 @@ module.exports = (args, globals) => {
     });
 
     process.stdout.write(
-      `\n${bold('available commands')}\n\n${scriptLines.join('\n')}\n`
+      `${dim('💡  Run `please --help` for more info.')}\n` +
+        '\n' +
+        '\n' +
+        `${bold('available scripts')}\n` +
+        '\n' +
+        `${scriptLines.join('\n')}\n`
     );
     return 0;
   }
