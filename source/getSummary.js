@@ -11,6 +11,12 @@ module.exports = script => {
   const commentFormat =
     (shebangParts[0] === '/bin/sh' && commentPattern.hash) ||
     (shebangParts[0] === '/bin/bash' && commentPattern.hash) ||
+    (shebangParts[0] === '/usr/bin/env' &&
+      shebangParts[1] === 'sh' &&
+      commentPattern.hash) ||
+    (shebangParts[0] === '/usr/bin/env' &&
+      shebangParts[1] === 'bash' &&
+      commentPattern.hash) ||
     null;
   if (!commentFormat) return null;
 
