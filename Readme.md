@@ -140,6 +140,8 @@ For future compatibility, make sure your script names don’t begin with a dash 
 
 Windows support isn’t there just yet. It’s perfectly possible though. So if you need it, don’t hesitate to [give us a shout](https://git.io/please.issues).
 
+Script summaries currently only work with scripts written in sh, bash, python and javascript. [Let us know](https://git.io/please.issues) if you’d like us to support other languages.
+
 
 
 

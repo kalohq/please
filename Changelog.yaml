@@ -1,3 +1,7 @@
+master:
+  fixed bugs:
+    - Documentation fix
+
 1.1.0:
   date: 2017-10-27
   new features:
