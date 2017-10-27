@@ -59,7 +59,7 @@ please --help
 
 ## DESCRIPTION
 
-please makes it super simple to write and manage project scripts and your day-to-day command line tricks.
+please makes it super simple to write and manage project scripts.
 
 When we say “simple”, we really mean it. Write your scripts as plain old executable files – be it in bash, python, JavaScript or any other language of choice. Put them in a `scripts/` directory in your project root.
 
