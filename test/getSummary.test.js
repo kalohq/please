@@ -26,3 +26,9 @@ test('Supports bash scripts', is => {
   is.equal(getSummary(script), summary);
   is.end();
 });
+
+test('Supports python scripts', is => {
+  const script = `#! /usr/bin/env python\n# ${summary}\n`;
+  is.equal(getSummary(script), summary);
+  is.end();
+});

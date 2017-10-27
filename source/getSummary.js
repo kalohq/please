@@ -17,6 +17,9 @@ module.exports = script => {
     (shebangParts[0] === '/usr/bin/env' &&
       shebangParts[1] === 'bash' &&
       commentPattern.hash) ||
+    (shebangParts[0] === '/usr/bin/env' &&
+      shebangParts[1] === 'python' &&
+      commentPattern.hash) ||
     null;
   if (!commentFormat) return null;
 
