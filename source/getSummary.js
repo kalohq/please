@@ -9,7 +9,9 @@ module.exports = script => {
 
   const shebangParts = shebangMatch[1].split(/ +/);
   const commentFormat =
-    shebangParts[0] === '/bin/sh' ? commentPattern.hash : null;
+    (shebangParts[0] === '/bin/sh' && commentPattern.hash) ||
+    (shebangParts[0] === '/bin/bash' && commentPattern.hash) ||
+    null;
   if (!commentFormat) return null;
 
   const secondLine = script.split('\n')[1];
