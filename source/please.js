@@ -5,6 +5,7 @@ const childProcess = require('child_process');
 const permissions = require('mode-to-permissions');
 const hasbin = require('hasbin');
 const {bold} = require('chalk');
+const getSummary = require('./getSummary');
 
 const fileInfo = filePath => {
   let stats;
@@ -82,18 +83,27 @@ module.exports = (args, globals) => {
     const allScripts = scriptsDirs.map(dir =>
       fs
         .readdirSync(dir)
-        .filter(file => fileInfo(path.join(dir, file)).executable)
+        .map(filename => ({filename, filepath: path.join(dir, filename)}))
+        .filter(script => fileInfo(script.filepath).executable)
     );
     const allScriptsFlat = Array.prototype.concat.apply([], allScripts);
 
-    /* eslint-disable prefer-template */
-    // So how do you propose to format this, ESLint?
-    process.stdout.write(
-      '\n' +
-        `${bold('available commands')}\n\n` +
-        allScriptsFlat.map(script => `${script}\n`).join('')
+    const longestScriptName = allScriptsFlat.reduce(
+      (result, {filename}) => Math.max(result, filename.length),
+      0
     );
-    /* eslint-enable prefer-template */
+
+    const scriptLines = allScriptsFlat.map(({filename, filepath}) => {
+      const scriptContent = fs.readFileSync(filepath, {encoding: 'utf8'});
+      const summary = getSummary(scriptContent);
+      return !summary
+        ? filename
+        : `${filename.padEnd(longestScriptName)}  ${summary}`;
+    });
+
+    process.stdout.write(
+      `\n${bold('available commands')}\n\n${scriptLines.join('\n')}\n`
+    );
     return 0;
   }
 

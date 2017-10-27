@@ -6,7 +6,7 @@ const path = require('path');
 const packageInfo = require('../package.json');
 const naked = require('strip-ansi');
 
-const executableConfig = {mode: 0o111};
+const executableConfig = {mode: 0o555};
 const executable = mockFs.file(executableConfig);
 
 const newProcess = spread =>
@@ -349,6 +349,7 @@ test('Prints one-liner summaries using the first comment under the shebang', is 
       'available commands\n' +
       '\n' +
       `script-one              ${scriptOneDocs}\n` +
+      `script-three\n` +
       `script-two-longer-name  ${scriptTwoDocs}\n`,
     'prints the right stuff'
   );
