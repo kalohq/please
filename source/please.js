@@ -7,6 +7,14 @@ const hasbin = require('hasbin');
 const {bold} = require('chalk');
 const getSummary = require('./getSummary');
 
+const padEnd = (string, length) => {
+  let result = string;
+  while (result.length < length) {
+    result += ' ';
+  }
+  return result;
+};
+
 const fileInfo = filePath => {
   let stats;
   try {
@@ -98,7 +106,7 @@ module.exports = (args, globals) => {
       const summary = getSummary(scriptContent);
       return !summary
         ? filename
-        : `${filename.padEnd(longestScriptName)}  ${summary}`;
+        : `${padEnd(filename, longestScriptName)}  ${summary}`;
     });
 
     process.stdout.write(
