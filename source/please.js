@@ -45,6 +45,17 @@ function findScriptsDirs(directories, currentPath) {
   const nextDirectories = scriptsStat.isDirectory()
     ? directories.concat([scriptsPath])
     : directories;
+
+  let pleasercStat;
+  try {
+    pleasercStat = fs.statSync(path.resolve(currentPath, '.pleaserc'));
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+  if (!!pleasercStat && pleasercStat.isFile()) {
+    return nextDirectories;
+  }
+
   if (nextPath === currentPath) return nextDirectories;
   return findScriptsDirs(nextDirectories, nextPath);
 }

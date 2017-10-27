@@ -263,6 +263,46 @@ test('Looks for executables recursively, crawling up the directory tree', is => 
   is.end();
 });
 
+test('Stops looking for executables recursively once it has found a .pleaserc file', is => {
+  const script = 'my-script';
+  const status = 5;
+
+  const spawnSync = sinon.stub().returns({status});
+  const cwd = '/current-working-dir';
+  const process = newProcess({
+    cwd: () => cwd,
+  });
+
+  const please = proxyquire('../source/please', {
+    child_process: {spawnSync},
+  });
+
+  mockFs({
+    '/scripts': {
+      [script]: executable,
+    },
+    [cwd]: {
+      '.pleaserc': '',
+      scripts: {
+        'other-script': executable,
+      },
+    },
+  });
+
+  let errorMessage;
+  try {
+    please([script], {process});
+  } catch (e) {
+    errorMessage = e.message;
+  }
+  is.true(
+    /can’t find the script/.test(errorMessage),
+    'doesn’t find scripts higher up the directory tree'
+  );
+
+  is.end();
+});
+
 test('Prints a list of found executables when called without arguments', is => {
   const scriptOne = 'script-one';
   const scriptTwo = 'script-two';
