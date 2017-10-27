@@ -32,3 +32,9 @@ test('Supports python scripts', is => {
   is.equal(getSummary(script), summary);
   is.end();
 });
+
+test('Supports node scripts', is => {
+  const script = `#! /usr/bin/env node\n// ${summary}\n`;
+  is.equal(getSummary(script), summary);
+  is.end();
+});
