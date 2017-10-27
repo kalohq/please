@@ -6,7 +6,7 @@
     "please": "bin/please"
   },
   "scripts": {
-    "prepublish": "bin/please manpages",
+    "prepublishOnly": "bin/please manpages",
     "develop": "node-dev --respawn --no-notify --no-deps test/",
     "test": "eslint . && node test/"
   },
