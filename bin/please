@@ -1,4 +1,11 @@
 #! /usr/bin/env node
 const please = require('../source/please.js');
+const PleaseError = require('../source/PleaseError');
 
-process.exit(please(process.argv.slice(2), {process}));
+try {
+  please(process.argv.slice(2), {process});
+} catch (error) {
+  if (!(error instanceof PleaseError)) throw error;
+  process.stdout.write(`${error.message}\n`);
+  process.exit(1);
+}

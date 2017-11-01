@@ -1,12 +1,12 @@
 const path = require('path');
 const fs = require('fs');
-const tinyError = require('tiny-error');
 const childProcess = require('child_process');
 const permissions = require('mode-to-permissions');
 const hasbin = require('hasbin');
 const {bold, dim} = require('chalk');
 const getSummary = require('./getSummary');
 const yaml = require('js-yaml');
+const PleaseError = require('./PleaseError');
 
 const padEnd = (string, length) => {
   let result = string;
@@ -96,7 +96,7 @@ module.exports = (args, globals) => {
   const cwd = process.cwd();
   const scriptsDirs = findScriptsDirs([], cwd);
   if (!scriptsDirs.length)
-    throw tinyError(
+    throw new PleaseError(
       'Hmmm. We’ve looked everywhere, but we can’t find a scripts directory. ' +
         'Make sure your current working directory or any of its ancestors ' +
         'contains a subdirectory named `scripts`.'
@@ -145,7 +145,7 @@ module.exports = (args, globals) => {
     const file = fileInfo(data.file);
     if (!file.exists) return false;
     if (!file.executable)
-      throw tinyError(
+      throw new PleaseError(
         `Pssst. We can’t run the file \`${relativeScriptPath(
           data.dir
         )}\`, because ` +
@@ -156,7 +156,7 @@ module.exports = (args, globals) => {
   });
 
   if (scriptPathData === undefined)
-    throw tinyError(
+    throw new PleaseError(
       'Aw shucks! We’ve searched the whole place, but we can’t find ' +
         `the script \`${script}\`. Make sure there’s an executable file ` +
         `at \`${relativeScriptPath(scriptsDirs[0])}\`.`

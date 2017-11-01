@@ -1,9 +1,13 @@
+2.0.1:
+  fixed bugs:
+    - People-friendly error reporting
+
 2.0.0:
   date: 2017-10-27
   breaking changes:
     - >
       please now stops traversing up the directory tree unless it finds a
-      `.pleaserc` file with `subproject` set to true.
+      `.pleaserc` file with `subproject` set to `true`
 
 1.1.1:
   date: 2017-10-27
