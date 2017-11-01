@@ -109,7 +109,15 @@ module.exports = (args, globals) => {
         .map(filename => ({filename, filepath: path.join(dir, filename)}))
         .filter(script => fileInfo(script.filepath).executable)
     );
-    const allScriptsFlat = Array.prototype.concat.apply([], allScripts);
+    const allScriptsFlat = Array.prototype.concat
+      .apply([], allScripts)
+      .reduce(
+        (result, currentScript) =>
+          result.map(script => script.filename).includes(currentScript.filename)
+            ? result
+            : [...result, currentScript],
+        []
+      );
 
     const longestScriptName = allScriptsFlat.reduce(
       (result, {filename}) => Math.max(result, filename.length),

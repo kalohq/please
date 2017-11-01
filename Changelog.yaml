@@ -1,6 +1,7 @@
-2.0.1:
+master:
   fixed bugs:
     - People-friendly error reporting
+    - Don’t list script duplicates
 
 2.0.0:
   date: 2017-10-27

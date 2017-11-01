@@ -326,6 +326,7 @@ test('Prints a list of found executables when called without arguments', is => {
   mockFs({
     '/scripts': {
       [scriptTwo]: executable,
+      [scriptOne]: executable,
       directory: {},
     },
     [cwd]: {
