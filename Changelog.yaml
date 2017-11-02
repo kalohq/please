@@ -1,4 +1,5 @@
-master:
+2.0.2:
+  date: 2017-11-02
   fixed bugs:
     - Fix company name in license
 
