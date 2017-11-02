@@ -171,4 +171,4 @@ Many thanks to Catharsis Fonts for the amazing [open-source font](https://www.be
 
 ## LICENSE
 
-[MIT](https://git.io/please.license) © [Lystable](https://github.com/lystable)
+[MIT](https://git.io/please.license) © [Kalo](https://github.com/kalohq)
